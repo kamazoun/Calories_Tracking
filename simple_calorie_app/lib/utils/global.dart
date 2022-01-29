@@ -1,0 +1,1 @@
+const kAppTitle = 'Calorie App';
