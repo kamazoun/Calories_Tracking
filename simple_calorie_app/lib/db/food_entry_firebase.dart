@@ -33,6 +33,17 @@ class FoodEntryFirebase {
     return r;
   }
 
+  static Future deleteFoodEntry(FoodEntry foodEntry) async {
+    await _firestore
+        .collection('foodEntries')
+        .doc(foodEntry.userId)
+        .collection('userData')
+        .doc(foodEntry.id)
+        .delete();
+
+    await _adminFoodEntries.doc(foodEntry.id).delete();
+  }
+
   static Future<List<FoodEntry>> getAllFoodEntries() async {
     List<QueryDocumentSnapshot<FoodEntry>> foodEntries = await _foodEntriesRef
         .orderBy('calories')

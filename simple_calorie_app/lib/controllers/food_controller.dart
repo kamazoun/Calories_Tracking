@@ -101,4 +101,12 @@ class FoodController extends GetxController {
 
     return usersFoods;
   }
+
+  Future<void> deleteFoodEntry(FoodEntry foodEntry) async {
+    await FoodEntryFirebase.deleteFoodEntry(foodEntry);
+
+    //_foodEntries.remove(foodEntry);
+    _foodEntries.remove;
+    update();
+  }
 }

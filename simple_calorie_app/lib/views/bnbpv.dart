@@ -44,7 +44,7 @@ class _BNBPVState extends State<BNBPV> {
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () => Get.to(() => CreateFoodEntry()),
+        onPressed: () => Get.to(() => const CreateFoodEntry()),
       ),
     );
   }

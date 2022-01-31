@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:simple_calorie_app/views/admin/admin_auth_screen.dart';
 import 'package:simple_calorie_app/views/admin/food_list.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -19,7 +20,7 @@ class MainDrawer extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Licences'),
-            onTap: () => Get.to(() => const AdminFoodList()),
+            onTap: () => Get.off(() => const AdminAuthScreen()),
           ),
         ],
       ),
