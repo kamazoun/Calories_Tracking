@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:simple_calorie_app/views/admin/admin_auth_screen.dart';
@@ -20,7 +23,17 @@ class MainDrawer extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Admin'),
-            onTap: () => Get.off(() => AdminAuthScreen()),
+            onTap: () {
+              Get.close(1);
+              Get.off(() => AdminAuthScreen());
+            },
+          ),
+          ListTile(
+            title: const Text('Sign Out'),
+            onTap: () async {
+              await FirebaseAuth.instance.signOut();
+              exit(0);
+            },
           ),
         ],
       ),

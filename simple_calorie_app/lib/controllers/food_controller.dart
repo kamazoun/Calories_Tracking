@@ -44,6 +44,7 @@ class FoodController extends GetxController {
     FoodEntryFirebase.createFoodEntry(foodEntry, uid);
 
     _foodEntries.add(foodEntry);
+    _adminFoodEntries.add(foodEntry);
     update();
   }
 
@@ -113,7 +114,8 @@ class FoodController extends GetxController {
 
     _foodEntries.remove(foodEntry);
     _adminFoodEntries.remove(foodEntry);
-
+    _foodEntries.refresh();
+    _adminFoodEntries.refresh();
     update();
   }
 

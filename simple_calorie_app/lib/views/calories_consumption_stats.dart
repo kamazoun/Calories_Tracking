@@ -23,11 +23,14 @@ class CalorieConsumptionStats extends StatelessWidget {
                 const TableCell(
                     child: Text(
                         'Quantity of calories consumed during the last 7 days: ')),
-                TableCell(child: Text('${foodController.getWeeklyCalories()}'))
+                TableCell(
+                    child: Center(
+                        child: Text('${foodController.getWeeklyCalories()}')))
               ])
             ],
           ),
           const Divider(),
+          const Text('Your over-the-limit calories intake for the week:'),
           DataTable(columns: const [
             DataColumn(label: Text('Day')),
             DataColumn(label: Text('Calories Consumed'))

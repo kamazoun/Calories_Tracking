@@ -29,13 +29,19 @@ class _FoodEntryItemState extends State<FoodEntryItem> {
         //height: 200,
         child: ListTile(
           leading: widget.foodEntry.photoUrl.isNotEmpty
-              ? Image.network(
-                  widget.foodEntry.photoUrl,
-                  height: 100,
+              ? SizedBox(
+                  width: Get.width / 4,
+                  child: Image.network(
+                    widget.foodEntry.photoUrl,
+                    height: 100,
+                  ),
                 )
-              : Image.network(
-                  'https://firebasestorage.googleapis.com/v0/b/calorie-app-toptal54648.appspot.com/o/plate.jpg?alt=media&token=1cc5223f-6b3c-41de-b50b-4bfc161d541f',
-                  height: 100,
+              : SizedBox(
+                  width: Get.width / 4,
+                  child: Image.network(
+                    'https://firebasestorage.googleapis.com/v0/b/calorie-app-toptal54648.appspot.com/o/plate.jpg?alt=media&token=1cc5223f-6b3c-41de-b50b-4bfc161d541f',
+                    height: 100,
+                  ),
                 ),
           title: Text(widget.foodEntry.foodName),
           trailing: Text('${widget.foodEntry.calories} Calories'),

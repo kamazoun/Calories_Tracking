@@ -23,9 +23,7 @@ class FoodEntry {
               : DateTime.now(),
           userId: json != null ? json['userId'] as String : '',
           foodName: json != null ? json['foodName'] as String : '',
-          photoUrl: json != null
-              ? json['photoUrl'] as String
-              : '', // TODO: default food url
+          photoUrl: json != null ? json['photoUrl'] as String : '',
           calories: json != null ? json['calories'] as int : 2100,
         );
 

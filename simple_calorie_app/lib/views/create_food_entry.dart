@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:simple_calorie_app/controllers/auth_controller.dart';
 import 'package:simple_calorie_app/controllers/food_controller.dart';
 import 'package:simple_calorie_app/models/food_entry.dart';
@@ -16,6 +20,8 @@ class _CreateFoodEntryState extends State<CreateFoodEntry> {
   final TextEditingController nameController = TextEditingController();
 
   final TextEditingController caloriesController = TextEditingController();
+
+  XFile? selected;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -93,14 +99,28 @@ class _CreateFoodEntryState extends State<CreateFoodEntry> {
                 SizedBox(
                   height: 150,
                   width: 150,
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.camera, size: 100),
-                  ),
+                  child: selected == null
+                      ? IconButton(
+                          onPressed: () async {
+                            final XFile? r = await ImagePicker()
+                                .pickImage(source: ImageSource.camera);
+
+                            if (mounted) {
+                              setState(() {
+                                selected = r;
+                              });
+                            }
+                          },
+                          icon: const Icon(Icons.camera, size: 100),
+                        )
+                      : Image.file(File(selected!.path)),
                 ),
                 ElevatedButton.icon(
                     onPressed: () => createFoodEntry(
-                        context, authController, foodController),
+                          context,
+                          authController,
+                          foodController,
+                        ),
                     icon: const Icon(Icons.add),
                     label: const Text('Add Food Entry'))
               ],
@@ -114,11 +134,30 @@ class _CreateFoodEntryState extends State<CreateFoodEntry> {
   createFoodEntry(context, authController, foodController) async {
     if (_formKey.currentState!.validate()) {
       final uid = authController.user?.uid ?? await authController.userId;
+      String photoUrl = '';
+      if (null != selected) {
+        print(selected!.path);
+        try {
+          final UploadTask uploadTask = FirebaseStorage.instance
+              .ref('$uid/${selected!.path}.jpg')
+              .putFile(File(selected!.path));
+
+          final downloadUrl = await (await uploadTask.whenComplete(() => null))
+              .ref
+              .getDownloadURL();
+          photoUrl = downloadUrl.toString();
+        } on FirebaseException catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('An error occurred')),
+          );
+        }
+      }
+
       foodController.createFoodEntry(FoodEntry(
           time: DateTime.now(),
           userId: uid,
           foodName: nameController.text.trim(),
-          photoUrl: '',
+          photoUrl: photoUrl,
           calories: int.parse(caloriesController.text.trim())));
 
       ScaffoldMessenger.of(context).showSnackBar(

@@ -1,10 +1,10 @@
-import 'package:flutter/foundation.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:simple_calorie_app/controllers/food_controller.dart';
 import 'package:simple_calorie_app/models/food_entry.dart';
 import 'package:simple_calorie_app/views/admin/admin_report.dart';
 import 'package:simple_calorie_app/views/admin/user_foods.dart';
-import 'package:simple_calorie_app/views/bnbpv.dart';
 import 'package:get/get.dart';
 
 import '../create_food_entry.dart';
@@ -25,11 +25,11 @@ class AdminFoodList extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed: () => Get.to(() => AdminReport()),
-              icon: Icon(Icons.file_copy)),
+              onPressed: () => Get.to(() => const AdminReport()),
+              icon: const Icon(Icons.file_copy)),
           IconButton(
               onPressed: () {
-                Get.off(() => BNBPV());
+                exit(0);
               },
               icon: const Icon(Icons.close)),
         ],

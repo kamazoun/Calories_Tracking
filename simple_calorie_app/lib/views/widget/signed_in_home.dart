@@ -38,7 +38,7 @@ class _SignedInHomeState extends State<SignedInHome> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ElevatedButton(
+                TextButton(
                     onPressed: () async {
                       final DateTime? r = await showDatePicker(
                         context: context,
