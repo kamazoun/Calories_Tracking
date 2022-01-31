@@ -5,7 +5,7 @@ class FoodEntry {
   //final String foodId;
   final String foodName;
   final String photoUrl;
-  final double calories;
+  final int calories;
 
   FoodEntry(
       {this.id = '',
@@ -15,14 +15,18 @@ class FoodEntry {
       required this.photoUrl,
       required this.calories});
 
-  FoodEntry.fromJson(Map<String, Object> json)
+  FoodEntry.fromJson(String id, Map<String, dynamic>? json)
       : this(
-          id: json['id'] as String,
-          time: DateTime.fromMillisecondsSinceEpoch(json['time'] as int),
-          userId: json['userId'] as String,
-          foodName: json['foodName'] as String,
-          photoUrl: json['photoUrl'] as String,
-          calories: json['calories'] as double,
+          id: id, //json != null ? json['id'] as String : '',
+          time: json != null
+              ? DateTime.fromMillisecondsSinceEpoch(json['time'] as int)
+              : DateTime.now(),
+          userId: json != null ? json['userId'] as String : '',
+          foodName: json != null ? json['foodName'] as String : '',
+          photoUrl: json != null
+              ? json['photoUrl'] as String
+              : '', // TODO: default food url
+          calories: json != null ? json['calories'] as int : 2100,
         );
 
   Map<String, Object> toJson() {
