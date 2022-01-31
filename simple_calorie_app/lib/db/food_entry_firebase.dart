@@ -15,11 +15,22 @@ class FoodEntryFirebase {
         toFirestore: (foodEntry, _) => foodEntry.toJson(),
       );
 
+  static final CollectionReference _adminFoodEntries =
+      _firestore.collection('adminFoodEntries').withConverter<FoodEntry>(
+            fromFirestore: (snapshot, _) =>
+                FoodEntry.fromJson(snapshot.id, snapshot.data()),
+            toFirestore: (foodEntry, _) => foodEntry.toJson(),
+          );
+
   static _catchError(error) =>
       Get.snackbar('An Error Occurred', 'Please try again later!');
 
   static Future createFoodEntry(FoodEntry foodEntry, String uid) async {
-    return await _foodEntriesRef.add(foodEntry);
+    final DocumentReference r = await _foodEntriesRef.add(foodEntry);
+
+    await _adminFoodEntries.doc(r.id).set(foodEntry.copyWith(id: r.id));
+
+    return r;
   }
 
   static Future<List<FoodEntry>> getAllFoodEntries() async {
@@ -41,5 +52,18 @@ class FoodEntryFirebase {
             snapshot.data() as Map<String, dynamic>);
 
     return FoodEntry.fromJson(id, foodEntry);
+  }
+
+  static Future<List<FoodEntry>> getAdminFoodEntries() async {
+    final List<QueryDocumentSnapshot<Object?>> foodsSnap =
+        await _adminFoodEntries
+            .orderBy('userId')
+            .get()
+            .then((QuerySnapshot<Object?> snapshot) => snapshot.docs)
+            .catchError(_catchError);
+
+    return foodsSnap
+        .map((QueryDocumentSnapshot e) => e.data() as FoodEntry)
+        .toList();
   }
 }

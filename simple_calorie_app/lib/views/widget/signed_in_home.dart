@@ -22,8 +22,8 @@ class SignedInHome extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                    'From Date: ${fc.from?.month ?? '-'}/${fc.from?.day ?? '-'}th'),
-                Text('To Date: ${fc.to?.month ?? '-'}/${fc.to?.day ?? '-'}th'),
+                    'From Date: ${fc.from.value.month}/${fc.from.value.day}th'),
+                Text('To Date: ${fc.to.value.month}/${fc.to.value.day}th'),
               ],
             ),
           ),
@@ -65,9 +65,9 @@ class SignedInHome extends StatelessWidget {
           flex: 7,
           child: GetX<FoodController>(
             builder: (interface) => ListView.separated(
-              itemBuilder: (context, index) =>
-                  FoodEntryItem(foodEntry: interface.foodEntries[index]),
-              itemCount: interface.foodEntries.length,
+              itemBuilder: (context, index) => FoodEntryItem(
+                  foodEntry: interface.foodEntriesFiltered[index]),
+              itemCount: interface.foodEntriesFiltered.length,
               separatorBuilder: (__, _) => const SizedBox(height: 25),
             ),
           ),

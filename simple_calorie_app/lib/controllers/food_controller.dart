@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:simple_calorie_app/db/food_entry_firebase.dart';
@@ -7,14 +6,17 @@ import 'package:simple_calorie_app/models/food_entry.dart';
 class FoodController extends GetxController {
   late final RxList<FoodEntry> _foodEntries = RxList<FoodEntry>([]);
 
-  List<FoodEntry> get foodEntries =>
-      (from == null && to == null) ? _foodEntries : filteredFoodEntries();
+  List<FoodEntry> get foodEntries => _foodEntries();
 
-  DateTime? from;
-  DateTime? to;
+  RxList<FoodEntry> get foodEntriesFiltered => filteredFoodEntries();
+
+  Rx<DateTime> from = Rx(DateTime(2022));
+  Rx<DateTime> to = Rx(DateTime.now());
 
   FoodController() {
     _setUserFoods();
+    //setFrom(DateTime(2022));
+    //setTo(DateTime.now());
   }
 
   Future<void> _setUserFoods() async {
@@ -25,13 +27,13 @@ class FoodController extends GetxController {
     _foodEntries.addAll(foodEntries);
   }
 
-  List<FoodEntry> filteredFoodEntries() {
-    from = from ?? DateTime(2022);
-    to = to ?? DateTime.now();
-
+  RxList<FoodEntry> filteredFoodEntries() {
     return foodEntries
-        .where((fE) => fE.time.isAfter(from!) && fE.time.isBefore(to!))
-        .toList();
+        .where((fE) =>
+            fE.time.isAfter(from.value) &&
+            fE.time.isBefore(to.value.add(const Duration(days: 1))))
+        .toList()
+        .obs;
   }
 
   createFoodEntry(foodEntry) {
@@ -45,12 +47,12 @@ class FoodController extends GetxController {
   }
 
   setFrom(DateTime val) {
-    from = val;
+    from.value = val;
     update();
   }
 
   setTo(DateTime val) {
-    to = val;
+    to.value = val;
     update();
   }
 
@@ -82,19 +84,19 @@ class FoodController extends GetxController {
 
   Future<Map<String, List<FoodEntry>>> getAdminFoodEntries() async {
     Map<String, List<FoodEntry>> usersFoods = {};
-    QuerySnapshot<Map<String, dynamic>> results =
-        await FirebaseFirestore.instance.collection('foodEntries').get();
+    List<FoodEntry> results = await FoodEntryFirebase.getAdminFoodEntries();
 
-    for (QueryDocumentSnapshot element in results.docs) {
-      final QuerySnapshot userFoodSnap =
-          await element.reference.collection('userData').get();
+    List<String> done = [];
 
-      final List<FoodEntry> userFoods = userFoodSnap.docs
-          .map((QueryDocumentSnapshot e) =>
-              FoodEntry.fromJson(e.id, e.data() as Map<String, dynamic>))
-          .toList();
+    for (FoodEntry food in results) {
+      if (done.contains(food.userId)) {
+        continue;
+      }
+      final List<FoodEntry> userFoods =
+          results.where((element) => element.userId == food.userId).toList();
 
-      usersFoods[element.id] = userFoods;
+      usersFoods[food.userId] = userFoods;
+      done.add(food.userId);
     }
 
     return usersFoods;

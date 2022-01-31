@@ -19,7 +19,7 @@ class MainDrawer extends StatelessWidget {
           ),
           ListTile(
             title: const Text('Licences'),
-            onTap: () => Get.to(const AdminFoodList()),
+            onTap: () => Get.to(() => const AdminFoodList()),
           ),
         ],
       ),
