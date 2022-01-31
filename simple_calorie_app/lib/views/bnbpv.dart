@@ -20,7 +20,7 @@ class _BNBPVState extends State<BNBPV> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: _buildDrawer(currentIndex),
+      endDrawer: _buildDrawer(currentIndex),
       appBar: AppBar(
         title: const Text(kAppTitle),
         centerTitle: true,
@@ -58,7 +58,7 @@ class _BNBPVState extends State<BNBPV> {
   }
 
   Widget? _buildDrawer(currentPage) {
-    if (currentPage == 0) {
+    if (currentPage == 1) {
       return const MainDrawer();
     } else {
       return null;

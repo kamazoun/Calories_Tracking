@@ -4,11 +4,16 @@ import 'package:simple_calorie_app/controllers/food_controller.dart';
 
 import 'food_entry_item.dart';
 
-class SignedInHome extends StatelessWidget {
+class SignedInHome extends StatefulWidget {
   const SignedInHome({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<SignedInHome> createState() => _SignedInHomeState();
+}
+
+class _SignedInHomeState extends State<SignedInHome> {
   @override
   Widget build(BuildContext context) {
     final FoodController foodController = Get.find<FoodController>();
@@ -58,7 +63,7 @@ class SignedInHome extends StatelessWidget {
                         foodController.setTo(r);
                       }
                     },
-                    child: Text('Select Date To')),
+                    child: const Text('Select Date To')),
               ],
             )),
         Flexible(
@@ -66,6 +71,7 @@ class SignedInHome extends StatelessWidget {
           child: GetX<FoodController>(
             builder: (interface) => ListView.separated(
               itemBuilder: (context, index) => FoodEntryItem(
+                  key: ValueKey(interface.foodEntriesFiltered[index].id),
                   foodEntry: interface.foodEntriesFiltered[index]),
               itemCount: interface.foodEntriesFiltered.length,
               separatorBuilder: (__, _) => const SizedBox(height: 25),

@@ -27,3 +27,7 @@ String mapWeekDay(int weekDay) {
   }
   return r;
 }
+
+class GlobalFirebaseConfig {
+  static const password = '1234';
+}

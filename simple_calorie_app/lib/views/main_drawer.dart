@@ -19,8 +19,8 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: const Text('Licences'),
-            onTap: () => Get.off(() => const AdminAuthScreen()),
+            title: const Text('Admin'),
+            onTap: () => Get.off(() => AdminAuthScreen()),
           ),
         ],
       ),

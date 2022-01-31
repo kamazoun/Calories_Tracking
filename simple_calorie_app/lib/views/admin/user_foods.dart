@@ -16,7 +16,9 @@ class UserFoods extends StatelessWidget {
     return Card(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text('User: ${uid.substring(0, 5)}'),
-        ...foodEntries.map((e) => FoodEntryItem(foodEntry: e)).toList(),
+        ...foodEntries
+            .map((e) => FoodEntryItem(key: ValueKey(e.id), foodEntry: e))
+            .toList(),
       ]),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_calorie_app/controllers/food_controller.dart';
 import 'package:simple_calorie_app/models/food_entry.dart';
+import 'package:simple_calorie_app/views/admin/admin_report.dart';
 import 'package:simple_calorie_app/views/admin/user_foods.dart';
 import 'package:simple_calorie_app/views/bnbpv.dart';
 import 'package:get/get.dart';
@@ -24,10 +25,13 @@ class AdminFoodList extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
+              onPressed: () => Get.to(() => AdminReport()),
+              icon: Icon(Icons.file_copy)),
+          IconButton(
               onPressed: () {
                 Get.off(() => BNBPV());
               },
-              icon: const Icon(Icons.close))
+              icon: const Icon(Icons.close)),
         ],
       ),
       body: /*GetBuilder<FoodController>(
@@ -50,7 +54,8 @@ class AdminFoodList extends StatelessWidget {
           } else {
             return Column(
               children: const [
-                Text('Seems like there is no data yet!'),
+                Text(
+                    'Seems like there is no data yet!\n    Fetching from server.'),
                 Padding(
                   padding: EdgeInsets.all(15.0),
                   child: LinearProgressIndicator(),

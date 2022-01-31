@@ -5,6 +5,7 @@ import 'package:simple_calorie_app/models/food_entry.dart';
 
 class FoodController extends GetxController {
   late final RxList<FoodEntry> _foodEntries = RxList<FoodEntry>([]);
+  late final RxList<FoodEntry> _adminFoodEntries = RxList<FoodEntry>([]);
 
   List<FoodEntry> get foodEntries => _foodEntries();
 
@@ -24,7 +25,7 @@ class FoodController extends GetxController {
         .uid; // I can guarantee this as anonymous auth will be performed if user is not signed in
 */
     final foodEntries = await FoodEntryFirebase.getAllFoodEntries();
-    _foodEntries.addAll(foodEntries);
+    _foodEntries.assignAll(foodEntries);
   }
 
   RxList<FoodEntry> filteredFoodEntries() {
@@ -52,6 +53,9 @@ class FoodController extends GetxController {
   }
 
   setTo(DateTime val) {
+    if (val.isBefore(from.value)) {
+      return;
+    }
     to.value = val;
     update();
   }
@@ -85,6 +89,7 @@ class FoodController extends GetxController {
   Future<Map<String, List<FoodEntry>>> getAdminFoodEntries() async {
     Map<String, List<FoodEntry>> usersFoods = {};
     List<FoodEntry> results = await FoodEntryFirebase.getAdminFoodEntries();
+    _adminFoodEntries.assignAll(results);
 
     List<String> done = [];
 
@@ -99,14 +104,60 @@ class FoodController extends GetxController {
       done.add(food.userId);
     }
 
+    update();
     return usersFoods;
   }
 
   Future<void> deleteFoodEntry(FoodEntry foodEntry) async {
     await FoodEntryFirebase.deleteFoodEntry(foodEntry);
 
-    //_foodEntries.remove(foodEntry);
-    _foodEntries.remove;
+    _foodEntries.remove(foodEntry);
+    _adminFoodEntries.remove(foodEntry);
+
     update();
+  }
+
+  Future<List<FoodEntry>> _getPeriodFoodItem(
+      DateTime first, DateTime second) async {
+    if (_adminFoodEntries.isEmpty) {
+      await getAdminFoodEntries();
+    }
+    List<FoodEntry> entries = [];
+    for (FoodEntry element in _adminFoodEntries) {
+      if (element.time.isAfter(first) && element.time.isBefore(second)) {
+        entries.add(element);
+      }
+    }
+    return entries;
+  }
+
+  Future<int> getWeekEntries() async {
+    final r = await _getPeriodFoodItem(
+        DateTime.now().subtract(const Duration(days: 7)), DateTime.now());
+
+    return r.length;
+  }
+
+  Future<int> getLastWeekEntries() async {
+    final r = await _getPeriodFoodItem(
+        DateTime.now().subtract(const Duration(days: 14)),
+        DateTime.now().subtract(const Duration(days: 7)));
+
+    return r.length;
+  }
+
+  Future<double> getWeekAverage() async {
+    final r = await _getPeriodFoodItem(
+        DateTime.now().subtract(const Duration(days: 7)), DateTime.now());
+
+    final users = [];
+    for (FoodEntry foodEntry in r) {
+      if (users.contains(foodEntry.userId)) {
+        continue;
+      }
+      users.add(foodEntry.userId);
+    }
+
+    return r.length / users.length;
   }
 }
