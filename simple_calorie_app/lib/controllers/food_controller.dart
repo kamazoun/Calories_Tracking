@@ -152,14 +152,17 @@ class FoodController extends GetxController {
     final r = await _getPeriodFoodItem(
         DateTime.now().subtract(const Duration(days: 7)), DateTime.now());
 
+    int cals = 0;
+
     final users = [];
     for (FoodEntry foodEntry in r) {
+      cals += foodEntry.calories;
       if (users.contains(foodEntry.userId)) {
         continue;
       }
       users.add(foodEntry.userId);
     }
 
-    return r.length / users.length;
+    return cals / users.length * 1.0;
   }
 }

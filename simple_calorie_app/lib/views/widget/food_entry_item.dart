@@ -68,7 +68,7 @@ class _FoodEntryItemState extends State<FoodEntryItem> {
         onConfirm: () {
           Get.back(result: true);
         },
-        onCancel: () => false,
+        onCancel: () => Get.back(result: false),
       );
     }
     return true;

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -136,7 +137,6 @@ class _CreateFoodEntryState extends State<CreateFoodEntry> {
       final uid = authController.user?.uid ?? await authController.userId;
       String photoUrl = '';
       if (null != selected) {
-        print(selected!.path);
         try {
           final UploadTask uploadTask = FirebaseStorage.instance
               .ref('$uid/${selected!.path}.jpg')
@@ -157,7 +157,8 @@ class _CreateFoodEntryState extends State<CreateFoodEntry> {
           time: DateTime.now(),
           userId: uid,
           foodName: nameController.text.trim(),
-          photoUrl: photoUrl,
+          photoUrl:
+              'https://firebasestorage.googleapis.com/v0/b/calorie-app-toptal54648.appspot.com/o/pizza.jpeg?alt=media&token=5adc6b0c-2c6c-4cbe-ae91-9c1ac2ba6c3f', //photoUrl,
           calories: int.parse(caloriesController.text.trim())));
 
       ScaffoldMessenger.of(context).showSnackBar(
